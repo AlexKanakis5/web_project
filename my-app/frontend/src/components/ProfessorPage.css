@@ -1,0 +1,23 @@
+.professor-page {
+  padding: 20px;
+}
+
+.diplomas-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.diploma-item {
+  background: #f5f5f5;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.diploma-item h3 {
+  margin: 0 0 10px 0;
+}
+
+.diploma-item p {
+  margin: 5px 0;
+}
