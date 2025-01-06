@@ -8,6 +8,7 @@ import NavBar from './components/NavBar';
 import UpdateUser from './components/UpdateUser';
 import CreateDiploma from './components/CreateDiploma';
 import InvitesPage from './components/InvitesPage';
+import DiplomaFilesPage from './components/DiplomaFilesPage';
 import './components/NavBar.css';
 
 const App = () => {
@@ -45,6 +46,9 @@ const App = () => {
           </Route>
           <Route path="/invites">
             {user ? <InvitesPage user={user} /> : <Redirect to="/login" />}
+          </Route>
+          <Route path="/diplomas/:id/files">
+            {user ? <DiplomaFilesPage user={user} /> : <Redirect to="/login" />}
           </Route>
           <Redirect to="/" />
         </Switch>

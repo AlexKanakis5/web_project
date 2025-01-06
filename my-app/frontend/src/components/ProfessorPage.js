@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './ProfessorPage.css';
 
 const ProfessorPage = ({ user }) => {
@@ -51,6 +52,28 @@ const ProfessorPage = ({ user }) => {
     }
   };
 
+  const handleFileUpload = async (diplomaId, file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`http://localhost:5000/api/diplomas/${diplomaId}/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (response.ok) {
+      const updatedDiploma = await response.json();
+      setDiplomas((prevDiplomas) =>
+        prevDiplomas.map((diploma) =>
+          diploma.id === updatedDiploma.id ? updatedDiploma : diploma
+        )
+      );
+    } else {
+      const errorData = await response.json();
+      setError(errorData.message || 'Failed to upload file');
+    }
+  };
+
   const shouldShowInviteButton = (diploma) => {
     const allEmailsFilled = diploma.email_main_professor && diploma.email_second_professor && diploma.email_third_professor;
     const isUserAuthorized = user.email === diploma.email_main_professor || user.am === diploma.am_student;
@@ -90,6 +113,17 @@ const ProfessorPage = ({ user }) => {
                 </form>
               </div>
             )}
+            <div className="file-upload-container">
+              <label>Upload PDF:</label>
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => handleFileUpload(diploma.id, e.target.files[0])}
+              />
+            </div>
+            <Link to={`/diplomas/${diploma.id}/files`}>
+              <button>View Files</button>
+            </Link>
           </div>
         ))}
       </div>

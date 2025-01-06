@@ -15,7 +15,7 @@ const inviteRoutes = require('./routes/inviteRoutes');
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-app.use(cors());
+app.use(cors()); // Enable CORS
 app.use(bodyParser.json());
 
 // Configure session management
@@ -30,7 +30,6 @@ app.use(session({
   cookie: { secure: false } // Set to true if using HTTPS
 }));
 
-
 // API routes
 app.use('/api', authRoutes);
 app.use('/api', diplomaRoutes);
@@ -43,7 +42,6 @@ app.use(express.static(path.join(__dirname, '../../my-app/frontend/build')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../my-app/frontend/build', 'index.html'));
 });
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
