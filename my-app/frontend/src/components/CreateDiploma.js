@@ -5,9 +5,6 @@ import './CreateDiploma.css';
 const CreateDiploma = ({ user }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [amStudent, setAmStudent] = useState('');
-  const [emailSecondProfessor, setEmailSecondProfessor] = useState('');
-  const [emailThirdProfessor, setEmailThirdProfessor] = useState('');
   const [error, setError] = useState('');
   const history = useHistory();
 
@@ -22,10 +19,10 @@ const CreateDiploma = ({ user }) => {
       title,
       description,
       document_folder_number: '',
-      am_student: amStudent,
+      am_student: null,
       email_main_professor: user.email,
-      email_second_professor: emailSecondProfessor,
-      email_third_professor: emailThirdProfessor,
+      email_second_professor: null,
+      email_third_professor: null,
       status: 'Pending',
       grade: null,
       created_date: new Date(),
@@ -68,33 +65,6 @@ const CreateDiploma = ({ user }) => {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Student AM:</label>
-          <input
-            type="text"
-            value={amStudent}
-            onChange={(e) => setAmStudent(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Second Professor Email:</label>
-          <input
-            type="email"
-            value={emailSecondProfessor}
-            onChange={(e) => setEmailSecondProfessor(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Third Professor Email:</label>
-          <input
-            type="email"
-            value={emailThirdProfessor}
-            onChange={(e) => setEmailThirdProfessor(e.target.value)}
             required
           />
         </div>
