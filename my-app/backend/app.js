@@ -10,6 +10,7 @@ const pgSession = require('connect-pg-simple')(session);
 const app = express();
 const authRoutes = require('./routes/authRoutes');
 const diplomaRoutes = require('./routes/diplomaRoutes');
+const inviteRoutes = require('./routes/inviteRoutes');
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -33,6 +34,7 @@ app.use(session({
 // API routes
 app.use('/api', authRoutes);
 app.use('/api', diplomaRoutes);
+app.use('/api', inviteRoutes);
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../../my-app/frontend/build')));

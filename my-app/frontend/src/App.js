@@ -7,6 +7,7 @@ import ProfessorPage from './components/ProfessorPage';
 import NavBar from './components/NavBar';
 import UpdateUser from './components/UpdateUser';
 import CreateDiploma from './components/CreateDiploma';
+import InvitesPage from './components/InvitesPage';
 import './components/NavBar.css';
 
 const App = () => {
@@ -41,6 +42,9 @@ const App = () => {
           </Route>
           <Route path="/create-diploma">
             {user && user.user_type === 'professor' ? <CreateDiploma user={user} /> : <Redirect to="/login" />}
+          </Route>
+          <Route path="/invites">
+            {user ? <InvitesPage user={user} /> : <Redirect to="/login" />}
           </Route>
           <Redirect to="/" />
         </Switch>
