@@ -28,7 +28,7 @@ const InvitesPage = ({ user }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id, status }),
+      body: JSON.stringify({ id, status, am: user.am, email: user.email }),
     });
 
     if (response.ok) {
@@ -46,6 +46,7 @@ const InvitesPage = ({ user }) => {
       <ul className="invites-list">
         {sentInvites.map((invite) => (
           <li key={invite.id} className="invite-item">
+            <p>Diploma Title: {invite.diploma_title}</p>
             <p>Receiver Email: {invite.receiver_email}</p>
             <p>Status: {invite.reply}</p>
           </li>
@@ -56,10 +57,20 @@ const InvitesPage = ({ user }) => {
       <ul className="invites-list">
         {receivedInvites.map((invite) => (
           <li key={invite.id} className="invite-item">
+            <p>Diploma Title: {invite.diploma_title}</p>
             <p>Sender Email: {invite.sender_email}</p>
             <p>Status: {invite.reply}</p>
-            <button onClick={() => handleUpdateStatus(invite.id, 'accepted')}>Accept</button>
-            <button onClick={() => handleUpdateStatus(invite.id, 'declined')}>Decline</button>
+            <button
+              onClick={() => handleUpdateStatus(invite.id, 'accepted')}
+              disabled={invite.reply !== 'pending'}
+            >
+              Accept
+            </button>
+            <button
+              onClick={() => handleUpdateStatus(invite.id, 'declined')}
+            >
+              Decline
+            </button>
           </li>
         ))}
       </ul>

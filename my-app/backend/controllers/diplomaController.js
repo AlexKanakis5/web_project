@@ -65,7 +65,26 @@ const getDiplomasByProfessorEmail = async (req, res) => {
   }
 };
 
+const getDiplomasByStudentAm = async (req, res) => {
+  const { am } = req.params;
+
+  try {
+    const query = `
+      SELECT * FROM diplomas
+      WHERE am_student = $1
+    `;
+    const values = [am];
+
+    const result = await pool.query(query, values);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching diplomas:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   createDiploma,
   getDiplomasByProfessorEmail,
+  getDiplomasByStudentAm,
 };
