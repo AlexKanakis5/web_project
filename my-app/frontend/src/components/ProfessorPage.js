@@ -4,20 +4,47 @@ import './ProfessorPage.css';
 
 const ProfessorPage = ({ user }) => {
   const [diplomas, setDiplomas] = useState([]);
-  const [showInviteForm, setShowInviteForm] = useState(false);
+  const [filteredDiplomas, setFilteredDiplomas] = useState([]);
   const [selectedDiploma, setSelectedDiploma] = useState(null);
+  const [showInviteForm, setShowInviteForm] = useState(false);
   const [receiverEmail, setReceiverEmail] = useState('');
   const [error, setError] = useState('');
+  const [showDetails, setShowDetails] = useState(false);
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterRole, setFilterRole] = useState('all');
 
   useEffect(() => {
     const fetchDiplomas = async () => {
       const response = await fetch(`http://localhost:5000/api/diplomas/professor/${user.email}`);
       const data = await response.json();
       setDiplomas(data);
+      setFilteredDiplomas(data);
     };
 
     fetchDiplomas();
   }, [user.email]);
+
+  useEffect(() => {
+    filterDiplomas();
+  }, [filterStatus, filterRole, diplomas]);
+
+  const filterDiplomas = () => {
+    let filtered = diplomas;
+
+    if (filterStatus !== 'all') {
+      filtered = filtered.filter(diploma => diploma.status === filterStatus);
+    }
+
+    if (filterRole !== 'all') {
+      if (filterRole === 'main') {
+        filtered = filtered.filter(diploma => diploma.email_main_professor === user.email);
+      } else if (filterRole === 'second-third') {
+        filtered = filtered.filter(diploma => diploma.email_second_professor === user.email || diploma.email_third_professor === user.email);
+      }
+    }
+
+    setFilteredDiplomas(filtered);
+  };
 
   const handleInviteClick = (diploma) => {
     setSelectedDiploma(diploma);
@@ -52,45 +79,64 @@ const ProfessorPage = ({ user }) => {
     }
   };
 
-  const handleFileUpload = async (diplomaId, file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const response = await fetch(`http://localhost:5000/api/diplomas/${diplomaId}/upload`, {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (response.ok) {
-      const updatedDiploma = await response.json();
-      setDiplomas((prevDiplomas) =>
-        prevDiplomas.map((diploma) =>
-          diploma.id === updatedDiploma.id ? updatedDiploma : diploma
-        )
-      );
-    } else {
-      const errorData = await response.json();
-      setError(errorData.message || 'Failed to upload file');
-    }
-  };
-
   const shouldShowInviteButton = (diploma) => {
     const allEmailsFilled = diploma.email_main_professor && diploma.email_second_professor && diploma.email_third_professor;
-    const isUserAuthorized = user.email === diploma.email_main_professor || user.am === diploma.am_student;
-    return !allEmailsFilled && isUserAuthorized;
+    return !allEmailsFilled;
+  };
+
+  const handleDiplomaClick = (diploma) => {
+    setSelectedDiploma(diploma);
+    setShowDetails(true);
+  };
+
+  const handleHideDetails = () => {
+    setShowDetails(false);
   };
 
   return (
     <div className="professor-page">
       <h1>Welcome, Professor {user.name}</h1>
       <h2>Your Diplomas</h2>
+      <div className="filters">
+        <label>
+          Status:
+          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="finished">Finished</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </label>
+        <label>
+          Role:
+          <select value={filterRole} onChange={(e) => setFilterRole(e.target.value)}>
+            <option value="all">All</option>
+            <option value="main">Main Professor</option>
+            <option value="second-third">Second/Third Professor</option>
+          </select>
+        </label>
+      </div>
+      {showDetails && selectedDiploma && (
+        <div className="diploma-details">
+          <h2>Diploma Details</h2>
+          <p><strong>Title:</strong> {selectedDiploma.title}</p>
+          <p><strong>Description:</strong> {selectedDiploma.description}</p>
+          <p><strong>Student AM:</strong> {selectedDiploma.am_student}</p>
+          <p><strong>Main Professor Email:</strong> {selectedDiploma.email_main_professor}</p>
+          <p><strong>Second Professor Email:</strong> {selectedDiploma.email_second_professor}</p>
+          <p><strong>Third Professor Email:</strong> {selectedDiploma.email_third_professor}</p>
+          <p><strong>Created Date:</strong> {new Date(selectedDiploma.created_date).toLocaleDateString('en-GB')}</p>
+          <p><strong>Due Date:</strong> {new Date(selectedDiploma.due_date).toLocaleDateString('en-GB')}</p>
+          <p><strong>Grade:</strong> {selectedDiploma.grade}</p>
+          <button onClick={handleHideDetails}>Hide</button>
+        </div>
+      )}
       <div className="diplomas-grid">
-        {diplomas.map((diploma) => (
-          <div key={diploma.id} className="diploma-item">
+        {filteredDiplomas.map((diploma) => (
+          <div key={diploma.id} className="diploma-item" onClick={() => handleDiplomaClick(diploma)}>
             <h3>{diploma.title}</h3>
-            <p>{diploma.description}</p>
             <p>Status: {diploma.status}</p>
-            <p>Due Date: {new Date(diploma.due_date).toLocaleDateString()}</p>
+            <p>Due Date: {new Date(diploma.due_date).toLocaleDateString('en-GB')}</p>
             {shouldShowInviteButton(diploma) && (
               <button onClick={() => handleInviteClick(diploma)}>Invite</button>
             )}
@@ -113,14 +159,6 @@ const ProfessorPage = ({ user }) => {
                 </form>
               </div>
             )}
-            <div className="file-upload-container">
-              <label>Upload PDF:</label>
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={(e) => handleFileUpload(diploma.id, e.target.files[0])}
-              />
-            </div>
             <Link to={`/diplomas/${diploma.id}/files`}>
               <button>View Files</button>
             </Link>
