@@ -33,7 +33,7 @@ const App = () => {
         <NavBar user={user} setUser={setUser} />
         <Switch>
           <Route path="/" exact>
-            {user && user.user_type === 'student' ? <StudentPage /> : user && user.user_type === 'professor' ? <ProfessorPage user={user} /> : <HomePage />}
+            {user && user.user_type === 'student' ? <StudentPage user={user} /> : user && user.user_type === 'professor' ? <ProfessorPage user={user} /> : <HomePage />}
           </Route>
           <Route path="/login">
             {user ? <Redirect to="/" /> : <LoginForm setUser={setUser} />}
