@@ -76,6 +76,20 @@ id, username, password, user_type, am, phone, email, address.
 
 ## <b>Next steps: 
 
-<li>Add a user page 
-<li>Check the functionality where the student can select 2nd and 3rd professor. Can they add more? Does the invite dissapear when the professors have accepted?
-<li>Delete the invite if user declines (later in order to test invite system)
+<li>Add a user page - <b>DONE
+<li>Check the functionality where the student can select 2nd and 3rd professor. Can they add more? Does the invite dissapear when the professors have accepted? - <b>DONE????
+<li>Delete the invite if user declines (later in order to test invite system) <b>PENDING 
+<li>Student accepts invites but diploma isn't added <b>PENDING
+<li>Mobile site login press does nothing <b>PENDING
+<li>Add the option for the prof to grade a diploma
+
+
+# 07 / 01 / 2025
+
+## 1. Implemented Filtering On professor page 
+
+<li> Professor can filter diplomas based on status (pending, finished, cancelled) and their role(main/ second/ third prof).
+
+## 2. Added Statistics page
+
+<li> Added a statistics page for the professor implemented with chartjs. It doesn't do what I want it to because I haven't decided the stats it should show
