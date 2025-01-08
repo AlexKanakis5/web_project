@@ -11,12 +11,19 @@ const app = express();
 const authRoutes = require('./routes/authRoutes');
 const diplomaRoutes = require('./routes/diplomaRoutes');
 const inviteRoutes = require('./routes/inviteRoutes');
+const routes = require('./routes/index');
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-app.use(cors()); // Enable CORS
+// Enable CORS with specific options
+app.use(cors({
+  origin: 'http://localhost:3000', // Replace with your frontend's local IP address and port
+  credentials: true // Allow credentials (cookies, authorization headers, etc.)
+}));
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configure session management
 app.use(session({
@@ -35,6 +42,9 @@ app.use('/api', authRoutes);
 app.use('/api', diplomaRoutes);
 app.use('/api', inviteRoutes);
 
+// Use the routes defined in index.js
+app.use('/', routes);
+
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../../my-app/frontend/build')));
 
@@ -44,6 +54,6 @@ app.get('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });

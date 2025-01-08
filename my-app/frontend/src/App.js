@@ -4,6 +4,7 @@ import HomePage from './components/HomePage';
 import LoginForm from './components/LoginForm';
 import StudentPage from './components/StudentPage';
 import ProfessorPage from './components/ProfessorPage';
+import StatisticsPage from './components/StatisticsPage';
 import NavBar from './components/NavBar';
 import UpdateUser from './components/UpdateUser';
 import CreateDiploma from './components/CreateDiploma';
@@ -49,6 +50,9 @@ const App = () => {
           </Route>
           <Route path="/diplomas/:id/files">
             {user ? <DiplomaFilesPage user={user} /> : <Redirect to="/login" />}
+          </Route>
+          <Route path="/statistics">
+            {user && user.user_type === 'professor' ? <StatisticsPage user={user} /> : <Redirect to="/login" />}
           </Route>
           <Redirect to="/" />
         </Switch>

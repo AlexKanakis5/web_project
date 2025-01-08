@@ -1,0 +1,12 @@
+.statistics-page {
+  padding: 20px;
+}
+
+.chart-container {
+  margin-bottom: 140px;
+  height: 300px; 
+}
+
+.chart-container canvas {
+  max-height: 100%; 
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import './ProfessorPage.css';
 
 const ProfessorPage = ({ user }) => {
@@ -12,6 +12,7 @@ const ProfessorPage = ({ user }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterRole, setFilterRole] = useState('all');
+  const history = useHistory();
 
   useEffect(() => {
     const fetchDiplomas = async () => {
@@ -93,10 +94,15 @@ const ProfessorPage = ({ user }) => {
     setShowDetails(false);
   };
 
+  const handleShowStats = () => {
+    history.push('/statistics');
+  };
+
   return (
     <div className="professor-page">
       <h1>Welcome, Professor {user.name}</h1>
       <h2>Your Diplomas</h2>
+      <button onClick={handleShowStats}>Show Stats</button>
       <div className="filters">
         <label>
           Status:
