@@ -28,7 +28,7 @@ const InvitesPage = ({ user }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id, status, am: user.am, email: user.email }),
+      body: JSON.stringify({ id, status, am: user.am, email: user.email, userType: user.user_type }),
     });
 
     if (response.ok) {
@@ -62,7 +62,7 @@ const InvitesPage = ({ user }) => {
             <p>Status: {invite.reply}</p>
             <button
               onClick={() => handleUpdateStatus(invite.id, 'accepted')}
-              disabled={invite.reply !== 'pending'}
+              //disabled={invite.reply !== 'pending'}
             >
               Accept
             </button>

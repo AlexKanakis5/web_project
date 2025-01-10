@@ -56,7 +56,7 @@ const getReceivedInvites = async (req, res) => {
 };
 
 const updateInviteStatus = async (req, res) => {
-  const { id, status, email } = req.body;
+  const { id, status, email, userType, am } = req.body;
 
   let client;
   try {
@@ -74,6 +74,7 @@ const updateInviteStatus = async (req, res) => {
 
     if (status === 'accepted') {
       const diplomaTitle = inviteResult.rows[0].diploma_title;
+      console.log(diplomaTitle);
       const getDiplomaQuery = `
         SELECT email_main_professor, email_second_professor, email_third_professor
         FROM diplomas
@@ -84,72 +85,46 @@ const updateInviteStatus = async (req, res) => {
       const diplomaResult = await client.query(getDiplomaQuery, getDiplomaValues);
       const diploma = diplomaResult.rows[0];
 
-      if (!diploma.email_main_professor) {
+      if (userType === 'professor') {
+        if (!diploma.email_main_professor) {
+          const updateDiplomaQuery = `
+            UPDATE diplomas
+            SET email_main_professor = $1
+            WHERE title = $2
+          `;
+          const updateDiplomaValues = [email, diplomaTitle];
+          await client.query(updateDiplomaQuery, updateDiplomaValues);
+        } else if (!diploma.email_second_professor) {
+          const updateDiplomaQuery = `
+            UPDATE diplomas
+            SET email_second_professor = $1
+            WHERE title = $2
+          `;
+          const updateDiplomaValues = [email, diplomaTitle];
+          await client.query(updateDiplomaQuery, updateDiplomaValues);
+        } else if (!diploma.email_third_professor) {
+          const updateDiplomaQuery = `
+            UPDATE diplomas
+            SET email_third_professor = $1
+            WHERE title = $2
+          `;
+          const updateDiplomaValues = [email, diplomaTitle];
+          await client.query(updateDiplomaQuery, updateDiplomaValues);
+        }
+      } else if (userType === 'student') {
+        console.log(am)
         const updateDiplomaQuery = `
           UPDATE diplomas
-          SET email_main_professor = $1
+          SET am_student = $1
           WHERE title = $2
         `;
-        const updateDiplomaValues = [email, diplomaTitle];
-        await client.query(updateDiplomaQuery, updateDiplomaValues);
-      } else if (!diploma.email_second_professor) {
-        const updateDiplomaQuery = `
-          UPDATE diplomas
-          SET email_second_professor = $1
-          WHERE title = $2
-        `;
-        const updateDiplomaValues = [email, diplomaTitle];
-        await client.query(updateDiplomaQuery, updateDiplomaValues);
-      } else if (!diploma.email_third_professor) {
-        const updateDiplomaQuery = `
-          UPDATE diplomas
-          SET email_third_professor = $1
-          WHERE title = $2
-        `;
-        const updateDiplomaValues = [email, diplomaTitle];
-        await client.query(updateDiplomaQuery, updateDiplomaValues);
-      }
-    } else if (status === 'declined') {
-      const diplomaTitle = inviteResult.rows[0].diploma_title;
-      const getDiplomaQuery = `
-        SELECT email_main_professor, email_second_professor, email_third_professor
-        FROM diplomas
-        WHERE title = $1
-        FOR UPDATE
-      `;
-      const getDiplomaValues = [diplomaTitle];
-      const diplomaResult = await client.query(getDiplomaQuery, getDiplomaValues);
-      const diploma = diplomaResult.rows[0];
-
-      if (diploma.email_main_professor === email) {
-        const updateDiplomaQuery = `
-          UPDATE diplomas
-          SET email_main_professor = NULL
-          WHERE title = $1
-        `;
-        const updateDiplomaValues = [diplomaTitle];
-        await client.query(updateDiplomaQuery, updateDiplomaValues);
-      } else if (diploma.email_second_professor === email) {
-        const updateDiplomaQuery = `
-          UPDATE diplomas
-          SET email_second_professor = NULL
-          WHERE title = $1
-        `;
-        const updateDiplomaValues = [diplomaTitle];
-        await client.query(updateDiplomaQuery, updateDiplomaValues);
-      } else if (diploma.email_third_professor === email) {
-        const updateDiplomaQuery = `
-          UPDATE diplomas
-          SET email_third_professor = NULL
-          WHERE title = $1
-        `;
-        const updateDiplomaValues = [diplomaTitle];
+        const updateDiplomaValues = [am, diplomaTitle];
         await client.query(updateDiplomaQuery, updateDiplomaValues);
       }
     }
 
     await client.query('COMMIT');
-    res.status(200).json(inviteResult.rows[0]);
+    res.status(200).json({ message: 'Invite status updated successfully' });
   } catch (error) {
     if (client) {
       await client.query('ROLLBACK');

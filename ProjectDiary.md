@@ -83,6 +83,7 @@ id, username, password, user_type, am, phone, email, address.
 <li>Mobile site login press does nothing <b>PENDING
 <li>Add the option for the prof to grade a diploma. Maybe add a grade column for each teacher grade and then the faculty can set it to finished with the chosen grade 
 <li>When filter by main/third prof and pending, nothing shows 
+<li>Add delete button for each diploma, on the professors page 
 
 # 07 / 01 / 2025
 
@@ -109,3 +110,10 @@ id, username, password, user_type, am, phone, email, address.
 
 <li>Professor should be able to add a grade for a diploma
 <li>Only pending diplomas can be graded
+
+## 2. Fixed invite system
+
+<li>Student can accept invite
+<li>Student can invite 2nd/3rd professor
+<li>Professors can accept invites
+<li>When invite is accepted diploma is added to the main page 
