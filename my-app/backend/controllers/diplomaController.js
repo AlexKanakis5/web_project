@@ -83,8 +83,48 @@ const getDiplomasByStudentAm = async (req, res) => {
   }
 };
 
+const addGradesToDiploma = async (req, res) => {
+  const { id } = req.params;
+  const { grade, email } = req.body; // Include email in the request body
+
+  try {
+    // Check if the diploma is pending
+    const checkQuery = 'SELECT * FROM diplomas WHERE id = $1 AND status = $2';
+    const checkValues = [id, 'pending'];
+    const checkResult = await pool.query(checkQuery, checkValues);
+
+    if (checkResult.rows.length === 0) {
+      return res.status(400).json({ message: 'Only pending diplomas can be updated' });
+    }
+
+    // Determine which grade field to update based on the professor's email
+    let updateQuery = '';
+    let updateValues = [];
+
+    if (email === checkResult.rows[0].email_main_professor) {
+      updateQuery = 'UPDATE diplomas SET grade_main_professor = $1 WHERE id = $2';
+      updateValues = [grade, id];
+    } else if (email === checkResult.rows[0].email_second_professor) {
+      updateQuery = 'UPDATE diplomas SET grade_second_professor = $1 WHERE id = $2';
+      updateValues = [grade, id];
+    } else if (email === checkResult.rows[0].email_third_professor) {
+      updateQuery = 'UPDATE diplomas SET grade_third_professor = $1 WHERE id = $2';
+      updateValues = [grade, id];
+    } else {
+      return res.status(403).json({ message: 'You are not authorized to update this diploma' });
+    }
+
+    await pool.query(updateQuery, updateValues);
+    res.status(200).json({ message: 'Grade updated successfully' });
+  } catch (error) {
+    console.error('Error updating grades:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   createDiploma,
   getDiplomasByProfessorEmail,
   getDiplomasByStudentAm,
+  addGradesToDiploma,
 };

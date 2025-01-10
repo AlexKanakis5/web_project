@@ -6,9 +6,6 @@ const ProfessorPage = ({ user }) => {
   const [diplomas, setDiplomas] = useState([]);
   const [filteredDiplomas, setFilteredDiplomas] = useState([]);
   const [selectedDiploma, setSelectedDiploma] = useState(null);
-  const [showInviteForm, setShowInviteForm] = useState(false);
-  const [receiverEmail, setReceiverEmail] = useState('');
-  const [error, setError] = useState('');
   const [showDetails, setShowDetails] = useState(false);
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterRole, setFilterRole] = useState('all');
@@ -47,44 +44,6 @@ const ProfessorPage = ({ user }) => {
     setFilteredDiplomas(filtered);
   };
 
-  const handleInviteClick = (diploma) => {
-    setSelectedDiploma(diploma);
-    setShowInviteForm(true);
-  };
-
-  const handleInviteSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-
-    const inviteData = {
-      diploma_title: selectedDiploma.title,
-      sender_email: user.email,
-      receiver_email: receiverEmail,
-      type: user.user_type === 'professor' ? 'student' : 'professor',
-    };
-
-    const response = await fetch('http://localhost:5000/api/invites', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(inviteData),
-    });
-
-    if (response.ok) {
-      setShowInviteForm(false);
-      setReceiverEmail('');
-    } else {
-      const errorData = await response.json();
-      setError(errorData.message || 'Failed to create invite');
-    }
-  };
-
-  const shouldShowInviteButton = (diploma) => {
-    const allEmailsFilled = diploma.email_main_professor && diploma.email_second_professor && diploma.email_third_professor;
-    return !allEmailsFilled;
-  };
-
   const handleDiplomaClick = (diploma) => {
     setSelectedDiploma(diploma);
     setShowDetails(true);
@@ -94,15 +53,46 @@ const ProfessorPage = ({ user }) => {
     setShowDetails(false);
   };
 
-  const handleShowStats = () => {
-    history.push('/statistics');
+  const handleGradeChange = (grade) => {
+    const gradeField = user.email === selectedDiploma.email_main_professor
+      ? 'grade_main_professor'
+      : user.email === selectedDiploma.email_second_professor
+      ? 'grade_second_professor'
+      : 'grade_third_professor';
+
+    setSelectedDiploma({ ...selectedDiploma, [gradeField]: grade });
+  };
+
+  const handleSaveGrade = async () => {
+    const gradeField = user.email === selectedDiploma.email_main_professor
+      ? 'grade_main_professor'
+      : user.email === selectedDiploma.email_second_professor
+      ? 'grade_second_professor'
+      : 'grade_third_professor';
+
+    const response = await fetch(`http://localhost:5000/api/diplomas/${selectedDiploma.id}/grades`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        grade: selectedDiploma[gradeField],
+        email: user.email
+      }),
+    });
+
+    if (response.ok) {
+      alert('Grade saved successfully');
+    } else {
+      alert('Failed to save grade');
+    }
   };
 
   return (
     <div className="professor-page">
       <h1>Welcome, Professor {user.name}</h1>
       <h2>Your Diplomas</h2>
-      <button onClick={handleShowStats}>Show Stats</button>
+      <button onClick={() => history.push('/statistics')}>Show Stats</button>
       <div className="filters">
         <label>
           Status:
@@ -133,7 +123,41 @@ const ProfessorPage = ({ user }) => {
           <p><strong>Third Professor Email:</strong> {selectedDiploma.email_third_professor}</p>
           <p><strong>Created Date:</strong> {new Date(selectedDiploma.created_date).toLocaleDateString('en-GB')}</p>
           <p><strong>Due Date:</strong> {new Date(selectedDiploma.due_date).toLocaleDateString('en-GB')}</p>
-          <p><strong>Grade:</strong> {selectedDiploma.grade}</p>
+          {selectedDiploma.status === 'pending' && (
+            <>
+              {user.email === selectedDiploma.email_main_professor && (
+                <div>
+                  <label>Main Professor Grade:</label>
+                  <input
+                    type="number"
+                    value={selectedDiploma.grade_main_professor || ''}
+                    onChange={(e) => handleGradeChange(e.target.value)}
+                  />
+                </div>
+              )}
+              {user.email === selectedDiploma.email_second_professor && (
+                <div>
+                  <label>Second Professor Grade:</label>
+                  <input
+                    type="number"
+                    value={selectedDiploma.grade_second_professor || ''}
+                    onChange={(e) => handleGradeChange(e.target.value)}
+                  />
+                </div>
+              )}
+              {user.email === selectedDiploma.email_third_professor && (
+                <div>
+                  <label>Third Professor Grade:</label>
+                  <input
+                    type="number"
+                    value={selectedDiploma.grade_third_professor || ''}
+                    onChange={(e) => handleGradeChange(e.target.value)}
+                  />
+                </div>
+              )}
+              <button onClick={handleSaveGrade}>Save Grade</button>
+            </>
+          )}
           <button onClick={handleHideDetails}>Hide</button>
         </div>
       )}
@@ -143,28 +167,6 @@ const ProfessorPage = ({ user }) => {
             <h3>{diploma.title}</h3>
             <p>Status: {diploma.status}</p>
             <p>Due Date: {new Date(diploma.due_date).toLocaleDateString('en-GB')}</p>
-            {shouldShowInviteButton(diploma) && (
-              <button onClick={() => handleInviteClick(diploma)}>Invite</button>
-            )}
-            {showInviteForm && selectedDiploma && selectedDiploma.id === diploma.id && (
-              <div className="invite-form-container">
-                <form className="invite-form" onSubmit={handleInviteSubmit}>
-                  <h2>Create Invite</h2>
-                  {error && <div className="error">{error}</div>}
-                  <div>
-                    <label>Receiver Email:</label>
-                    <input
-                      type="email"
-                      value={receiverEmail}
-                      onChange={(e) => setReceiverEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <button type="submit">Send Invite</button>
-                  <button type="button" onClick={() => setShowInviteForm(false)}>Cancel</button>
-                </form>
-              </div>
-            )}
             <Link to={`/diplomas/${diploma.id}/files`}>
               <button>View Files</button>
             </Link>
