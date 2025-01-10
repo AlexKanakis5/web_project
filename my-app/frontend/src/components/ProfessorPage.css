@@ -1,17 +1,23 @@
 .professor-page {
   padding: 20px;
+  position: relative;
+}
+
+.filters {
+  margin-bottom: 20px;
 }
 
 .diplomas-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
 .diploma-item {
   background: #f5f5f5;
-  padding: 10px;
-  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
   position: relative;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -23,10 +29,15 @@
 
 .diploma-item h3 {
   margin: 0 0 10px 0;
+  margin-top: 0;
 }
 
 .diploma-item p {
   margin: 5px 0;
+}
+
+.diploma-item button {
+  margin-top: 10px;
 }
 
 .diploma-details {
@@ -34,11 +45,21 @@
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 20px;
-  width: calc(33.333% - 20px); /* Same width as diploma-item */
 }
 
 .diploma-details p {
   margin: 5px 0;
+}
+
+.diploma-details label {
+  display: block;
+  margin-top: 10px;
+}
+
+.diploma-details input {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
 }
 
 .diploma-details button {
@@ -54,6 +75,11 @@
 
 .diploma-details button:hover {
   background-color: #3700b3;
+}
+
+button[style] {
+  float: right;
+  margin-top: -50px;
 }
 
 .invite-form-container {

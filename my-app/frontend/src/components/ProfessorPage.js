@@ -88,9 +88,22 @@ const ProfessorPage = ({ user }) => {
     }
   };
 
+  const handleExportDiplomas = () => {
+    const dataStr = JSON.stringify(diplomas, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+    const exportFileDefaultName = 'diplomas.json';
+
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
   return (
     <div className="professor-page">
       <h1>Welcome, Professor {user.name}</h1>
+      <button onClick={handleExportDiplomas} style={{ float: 'right' }}>Export Diplomas</button>
       <h2>Your Diplomas</h2>
       <button onClick={() => history.push('/statistics')}>Show Stats</button>
       <div className="filters">
@@ -123,6 +136,9 @@ const ProfessorPage = ({ user }) => {
           <p><strong>Third Professor Email:</strong> {selectedDiploma.email_third_professor}</p>
           <p><strong>Created Date:</strong> {new Date(selectedDiploma.created_date).toLocaleDateString('en-GB')}</p>
           <p><strong>Due Date:</strong> {new Date(selectedDiploma.due_date).toLocaleDateString('en-GB')}</p>
+          <p><strong>Main Professor Grade:</strong> {selectedDiploma.grade_main_professor || 'Not submitted'}</p>
+          <p><strong>Second Professor Grade:</strong> {selectedDiploma.grade_second_professor || 'Not submitted'}</p>
+          <p><strong>Third Professor Grade:</strong> {selectedDiploma.grade_third_professor || 'Not submitted'}</p>
           {selectedDiploma.status === 'pending' && (
             <>
               {user.email === selectedDiploma.email_main_professor && (
