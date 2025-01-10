@@ -23,7 +23,7 @@ const CreateDiploma = ({ user }) => {
       email_main_professor: user.email,
       email_second_professor: null,
       email_third_professor: null,
-      status: 'Pending',
+      status: 'pending',
       grade: null,
       created_date: new Date(),
       finished_date: null,
