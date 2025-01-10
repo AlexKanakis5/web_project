@@ -86,6 +86,7 @@ id, username, password, user_type, am, phone, email, address.
 <li>Add delete button for each diploma, on the professors page 
 <li>Professor cant grade newly created diplomas <b>DONE (when creating new diplomas "pending" was uppercase -> "Pending")
 
+
 # 07 / 01 / 2025
 
 ## 1. Implemented Filtering On professor page 
