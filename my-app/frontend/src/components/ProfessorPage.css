@@ -45,6 +45,7 @@
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 20px;
+  max-width: 500px;
 }
 
 .diploma-details p {
@@ -151,4 +152,8 @@ button[style] {
   color: red;
   margin-bottom: 15px;
   text-align: center;
+}
+
+.grade-input{
+  max-width: fit-content;
 }

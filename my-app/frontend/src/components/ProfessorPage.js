@@ -203,7 +203,7 @@ const ProfessorPage = ({ user }) => {
         </label>
       </div>
       {showDetails && selectedDiploma && (
-        <div className="diploma-details">
+        <div className="diploma-details" >
           <h2>Diploma Details</h2>
           <p><strong>Title:</strong> {selectedDiploma.title}</p>
           <p><strong>Description:</strong> {selectedDiploma.description}</p>
@@ -221,7 +221,8 @@ const ProfessorPage = ({ user }) => {
               {user.email === selectedDiploma.email_main_professor && (
                 <div>
                   <label>Main Professor Grade:</label>
-                  <input
+                  <input 
+                    className="grade-input"
                     type="number"
                     value={selectedDiploma.grade_main_professor || ''}
                     onChange={(e) => handleGradeChange(e.target.value)}
@@ -231,7 +232,8 @@ const ProfessorPage = ({ user }) => {
               {user.email === selectedDiploma.email_second_professor && (
                 <div>
                   <label>Second Professor Grade:</label>
-                  <input
+                  <input 
+                    className='grade-input'
                     type="number"
                     value={selectedDiploma.grade_second_professor || ''}
                     onChange={(e) => handleGradeChange(e.target.value)}
@@ -242,6 +244,7 @@ const ProfessorPage = ({ user }) => {
                 <div>
                   <label>Third Professor Grade:</label>
                   <input
+                    className='grade-input'
                     type="number"
                     value={selectedDiploma.grade_third_professor || ''}
                     onChange={(e) => handleGradeChange(e.target.value)}
