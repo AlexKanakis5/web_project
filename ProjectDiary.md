@@ -81,8 +81,8 @@ id, username, password, user_type, am, phone, email, address.
 <li>Delete the invite if user declines (later in order to test invite system) <b>PENDING 
 <li>Student accepts invites but diploma isn't added <b>PENDING
 <li>Mobile site login press does nothing <b>PENDING
-<li>Add the option for the prof to grade a diploma
-
+<li>Add the option for the prof to grade a diploma. Maybe add a grade column for each teacher grade and then the faculty can set it to finished with the chosen grade 
+<li>When filter by main/third prof and pending, nothing shows 
 
 # 07 / 01 / 2025
 
@@ -93,3 +93,19 @@ id, username, password, user_type, am, phone, email, address.
 ## 2. Added Statistics page
 
 <li> Added a statistics page for the professor implemented with chartjs. It doesn't do what I want it to because I haven't decided the stats it should show
+
+
+
+# 08 / 01 / 2025
+
+## 1. Updated Statistics page
+
+<li>Now stats page displays 1. Average time to Complete per Year 2. Average Grade per Year 3. Correlation between time and grade
+
+
+# 10 / 01 / 2025
+
+## 1. Added option to grade diplomas
+
+<li>Professor should be able to add a grade for a diploma
+<li>Only pending diplomas can be graded
