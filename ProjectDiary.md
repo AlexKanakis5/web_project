@@ -79,11 +79,12 @@ id, username, password, user_type, am, phone, email, address.
 <li>Add a user page - <b>DONE
 <li>Check the functionality where the student can select 2nd and 3rd professor. Can they add more? Does the invite dissapear when the professors have accepted? - <b>DONE????
 <li>Delete the invite if user declines (later in order to test invite system) <b>PENDING 
-<li>Student accepts invites but diploma isn't added <b>PENDING
+<li>Student accepts invites but diploma isn't added <b> DONE
 <li>Mobile site login press does nothing <b>PENDING
 <li>Add the option for the prof to grade a diploma. Maybe add a grade column for each teacher grade and then the faculty can set it to finished with the chosen grade 
 <li>When filter by main/third prof and pending, nothing shows 
 <li>Add delete button for each diploma, on the professors page 
+<li>Professor cant grade newly created diplomas <b>DONE (when creating new diplomas "pending" was uppercase -> "Pending")
 
 # 07 / 01 / 2025
 
@@ -117,3 +118,8 @@ id, username, password, user_type, am, phone, email, address.
 <li>Student can invite 2nd/3rd professor
 <li>Professors can accept invites
 <li>When invite is accepted diploma is added to the main page 
+
+## 3. Added upload pdf file for student
+
+<li>Student can now upload pdf files for each diploma that they are concerned
+<li>Also added it back to professor 
