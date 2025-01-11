@@ -84,6 +84,7 @@ id, username, password, user_type, am, phone, email, address.
 <li>Add the option for the prof to grade a diploma. Maybe add a grade column for each teacher grade and then the faculty can set it to finished with the chosen grade 
 <li>When filter by main/third prof and pending, nothing shows 
 <li>Add delete button for each diploma, on the professors page 
+<li>Add option for diploma to be cancelled by main professor 
 <li>Professor cant grade newly created diplomas <b>DONE (when creating new diplomas "pending" was uppercase -> "Pending")
 
 
@@ -124,3 +125,12 @@ id, username, password, user_type, am, phone, email, address.
 
 <li>Student can now upload pdf files for each diploma that they are concerned
 <li>Also added it back to professor 
+
+
+# 11 / 01 / 2025
+
+## 1. Added Secretary page
+
+<li>Added new user to users table with user_type of secretary
+<li>Secretary user gets directed to secretary page upon login
+<li>They can view all pending diplomas 
