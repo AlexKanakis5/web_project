@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import './StudentPage.css';
+import './SecretaryPage.css';
 
-const StudentPage = ({ user }) => {
+const SecretaryPage = ({ user }) => {
   const [diplomas, setDiplomas] = useState([]);
   const [selectedDiploma, setSelectedDiploma] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!user) {
-      setError('User is not defined');
-      return;
-    }
-
-    const fetchDiplomas = async () => {
+    const fetchPendingDiplomas = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/diplomas/student/${user.am}`);
+        const response = await fetch('http://localhost:5000/api/diplomas/pending');
         if (response.ok) {
           const data = await response.json();
           setDiplomas(data);
@@ -29,46 +23,17 @@ const StudentPage = ({ user }) => {
       }
     };
 
-    fetchDiplomas();
-  }, [user.am]);
-
-  const handleFileUpload = async (diplomaId, file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await fetch(`http://localhost:5000/api/diplomas/${diplomaId}/upload`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        alert('File uploaded successfully');
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Failed to upload file');
-      }
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      setError('Failed to upload file');
-    }
-  };
-
-  const handleFileChange = (diplomaId, event) => {
-    const file = event.target.files[0];
-    if (file) {
-      handleFileUpload(diplomaId, file);
-    }
-  };
+    fetchPendingDiplomas();
+  }, []);
 
   const handleDiplomaClick = (diploma) => {
     setSelectedDiploma(diploma);
   };
 
   return (
-    <div className="student-page">
-      <h1>Welcome, {user.name}</h1>
-      <h2>Your Diplomas</h2>
+    <div className="secretary-page">
+      <h1>Welcome, Secretary</h1>
+      <h2>Pending Diplomas</h2>
       {selectedDiploma && (
         <div className="diploma-details">
           <h2>Diploma Details</h2>
@@ -80,9 +45,10 @@ const StudentPage = ({ user }) => {
           <p><strong>Third Professor Email:</strong> {selectedDiploma.email_third_professor}</p>
           <p><strong>Created Date:</strong> {new Date(selectedDiploma.created_date).toLocaleDateString('en-GB')}</p>
           <p><strong>Due Date:</strong> {new Date(selectedDiploma.due_date).toLocaleDateString('en-GB')}</p>
-          <button onClick={
-            () => setSelectedDiploma(null)
-          }>Hide details</button>
+          <p><strong>Main Professor Grade:</strong> {selectedDiploma.grade_main_professor || 'Not submitted'}</p>
+          <p><strong>Second Professor Grade:</strong> {selectedDiploma.grade_second_professor || 'Not submitted'}</p>
+          <p><strong>Third Professor Grade:</strong> {selectedDiploma.grade_third_professor || 'Not submitted'}</p>
+          <button onClick={() => setSelectedDiploma(null)}>Hide details</button>
         </div>
       )}
       <div className="diplomas-grid">
@@ -91,31 +57,18 @@ const StudentPage = ({ user }) => {
             <h3>{diploma.title}</h3>
             <p>Status: {diploma.status}</p>
             <p>Due Date: {new Date(diploma.due_date).toLocaleDateString('en-GB')}</p>
-            <Link to={`/diplomas/${diploma.id}/files`}>
-              <button>View Files</button>
-            </Link>
-            <div className="file-upload-container">
-              <label>Upload PDF:</label>
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={(e) => handleFileChange(diploma.id, e)}
-              />
-            </div>
           </div>
         ))}
       </div>
-      
     </div>
   );
 };
 
-StudentPage.propTypes = {
+SecretaryPage.propTypes = {
   user: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    am: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-export default StudentPage;
+export default SecretaryPage;

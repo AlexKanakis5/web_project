@@ -11,7 +11,7 @@ import CreateDiploma from './components/CreateDiploma';
 import InvitesPage from './components/InvitesPage';
 import DiplomaFilesPage from './components/DiplomaFilesPage';
 import './components/NavBar.css';
-
+import SecretaryPage from './components/SecretaryPage';
 const App = () => {
   const [user, setUser] = useState(null);
 
@@ -34,7 +34,15 @@ const App = () => {
         <NavBar user={user} setUser={setUser} />
         <Switch>
           <Route path="/" exact>
-            {user && user.user_type === 'student' ? <StudentPage user={user} /> : user && user.user_type === 'professor' ? <ProfessorPage user={user} /> : <HomePage />}
+            {user && user.user_type === 'student' ? (
+              <StudentPage user={user} />
+            ) : user && user.user_type === 'professor' ? (
+              <ProfessorPage user={user} />
+            ) : user && user.user_type === 'secretary' ? (
+              <SecretaryPage user={user} />
+            ) : (
+              <HomePage />
+            )}
           </Route>
           <Route path="/login">
             {user ? <Redirect to="/" /> : <LoginForm setUser={setUser} />}

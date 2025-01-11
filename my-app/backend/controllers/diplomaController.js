@@ -1,4 +1,5 @@
 const pool = require('../config');
+const path = require('path');
 
 const createDiploma = async (req, res) => {
   const {
@@ -122,9 +123,45 @@ const addGradesToDiploma = async (req, res) => {
   }
 };
 
+const getPendingDiplomas = async (req, res) => {
+  try {
+    const query = 'SELECT * FROM diplomas WHERE status = $1';
+    const values = ['pending'];
+    const result = await pool.query(query, values);
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching pending diplomas:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const uploadFile = async (req, res) => {
+  const { id } = req.params;
+
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
+  }
+
+  const filePath = path.join(__dirname, '../uploads', req.file.filename);
+
+  try {
+    const query = 'INSERT INTO diploma_files (diploma_id, file_path) VALUES ($1, $2)';
+    const values = [id, filePath];
+    await pool.query(query, values);
+
+    res.status(200).json({ message: 'File uploaded successfully' });
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   createDiploma,
   getDiplomasByProfessorEmail,
   getDiplomasByStudentAm,
   addGradesToDiploma,
+  getPendingDiplomas,
+  uploadFile,
 };
