@@ -14,9 +14,6 @@ router.get('/diplomas/:id/files/:fileName', uploadController.getFile);
 router.put('/diplomas/:id/grades', diplomaController.addGradesToDiploma);
 router.get('/diplomas/pending', diplomaController.getPendingDiplomas);
 router.put('/diplomas/:id/cancel', diplomaController.cancelDiploma);
-
-router.get('/diplomas/pending', diplomaController.getPendingDiplomas);
-router.put('/diplomas/:id/cancel', diplomaController.cancelDiploma);
-router.post('/diplomas/:id/upload', upload.single('file'), diplomaController.uploadFile);
+router.put('/diplomas/:id/finish', diplomaController.finishDiploma);
 
 module.exports = router;

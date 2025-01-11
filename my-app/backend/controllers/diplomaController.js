@@ -169,6 +169,32 @@ const cancelDiploma = async (req, res) => {
   }
 };
 
+const finishDiploma = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const query = 'SELECT grade_main_professor, grade_second_professor, grade_third_professor FROM diplomas WHERE id = $1';
+    const values = [id];
+    const result = await pool.query(query, values);
+    const diploma = result.rows[0];
+
+    if (!diploma.grade_main_professor || !diploma.grade_second_professor || !diploma.grade_third_professor) {
+      return res.status(400).json({ message: 'All professors must submit grades before finishing the diploma' });
+    }
+
+    const finalGrade = (diploma.grade_main_professor + diploma.grade_second_professor + diploma.grade_third_professor) / 3;
+
+    const updateQuery = 'UPDATE diplomas SET status = $1, grade = $2 WHERE id = $3 RETURNING *';
+    const updateValues = ['finished', finalGrade, id];
+    const updateResult = await pool.query(updateQuery, updateValues);
+
+    res.status(200).json(updateResult.rows[0]);
+  } catch (error) {
+    console.error('Error finishing diploma:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 const uploadFile = async (req, res) => {
   const { id } = req.params;
 
@@ -197,5 +223,6 @@ module.exports = {
   addGradesToDiploma,
   getPendingDiplomas,
   cancelDiploma,
+  finishDiploma,
   uploadFile,
 };

@@ -48,6 +48,25 @@ const SecretaryPage = ({ user }) => {
     }
   };
 
+  const handleFinishDiploma = async (diplomaId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/diplomas/${diplomaId}/finish`, {
+        method: 'PUT',
+      });
+
+      if (response.ok) {
+        const updatedDiploma = await response.json();
+        setDiplomas(diplomas.map(diploma => diploma.id === diplomaId ? updatedDiploma : diploma));
+        setSelectedDiploma(updatedDiploma);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to finish diploma');
+      }
+    } catch (error) {
+      setError('Failed to finish diploma');
+    }
+  };
+
   return (
     <div className="secretary-page">
       <h1>Welcome, Secretary</h1>
@@ -68,6 +87,9 @@ const SecretaryPage = ({ user }) => {
           <p><strong>Third Professor Grade:</strong> {selectedDiploma.grade_third_professor || 'Not submitted'}</p>
           <button onClick={() => setSelectedDiploma(null)}>Hide details</button>
           <button onClick={() => handleCancelDiploma(selectedDiploma.id)}>Cancel Diploma</button>
+          {selectedDiploma.grade_main_professor && selectedDiploma.grade_second_professor && selectedDiploma.grade_third_professor && (
+            <button onClick={() => handleFinishDiploma(selectedDiploma.id)}>Finish Diploma</button>
+          )}
         </div>
       )}
       <div className="diplomas-grid">
