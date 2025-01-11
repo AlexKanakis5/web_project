@@ -195,26 +195,26 @@ const finishDiploma = async (req, res) => {
   }
 };
 
-const uploadFile = async (req, res) => {
-  const { id } = req.params;
+// const uploadFile = async (req, res) => {
+//   const { id } = req.params;
 
-  if (!req.file) {
-    return res.status(400).json({ message: 'No file uploaded' });
-  }
+//   if (!req.file) {
+//     return res.status(400).json({ message: 'No file uploaded' });
+//   }
 
-  const filePath = path.join(__dirname, '../uploads', req.file.filename);
+//   const filePath = path.join(__dirname, '../uploads', req.file.filename);
 
-  try {
-    const query = 'INSERT INTO diploma_files (diploma_id, file_path) VALUES ($1, $2)';
-    const values = [id, filePath];
-    await pool.query(query, values);
+//   try {
+//     const query = 'INSERT INTO diploma_files (diploma_id, file_path) VALUES ($1, $2)';
+//     const values = [id, filePath];
+//     await pool.query(query, values);
 
-    res.status(200).json({ message: 'File uploaded successfully' });
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+//     res.status(200).json({ message: 'File uploaded successfully' });
+//   } catch (error) {
+//     console.error('Error uploading file:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
 
 module.exports = {
   createDiploma,
@@ -224,5 +224,5 @@ module.exports = {
   getPendingDiplomas,
   cancelDiploma,
   finishDiploma,
-  uploadFile,
+
 };
