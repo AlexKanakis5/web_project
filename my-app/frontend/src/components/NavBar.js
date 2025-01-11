@@ -22,12 +22,16 @@ const NavBar = ({ user, setUser }) => {
                 <button className="navbar-button">Create Diploma</button>
               </Link>
             )}
-            <Link to="/invites">
-              <button className="navbar-button">View Invites</button>
-            </Link>
-            <Link to="/update">
-              <button className="navbar-button">Update Info</button>
-            </Link>
+            {user.user_type !== 'secretary' && (
+              <>
+                <Link to="/invites">
+                  <button className="navbar-button">View Invites</button>
+                </Link>
+                <Link to="/update">
+                  <button className="navbar-button">Update Info</button>
+                </Link>
+              </>
+            )}
             <button className="navbar-button" onClick={handleSignOut}>Sign Out</button>
           </>
         )}
