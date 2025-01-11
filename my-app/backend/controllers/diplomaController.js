@@ -136,6 +136,21 @@ const getPendingDiplomas = async (req, res) => {
   }
 };
 
+const cancelDiploma = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const query = 'UPDATE diplomas SET status = $1 WHERE id = $2';
+    const values = ['cancelled', id];
+    await pool.query(query, values);
+
+    res.status(200).json({ message: 'Diploma cancelled successfully' });
+  } catch (error) {
+    console.error('Error cancelling diploma:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 const uploadFile = async (req, res) => {
   const { id } = req.params;
 
@@ -163,5 +178,6 @@ module.exports = {
   getDiplomasByStudentAm,
   addGradesToDiploma,
   getPendingDiplomas,
+  cancelDiploma,
   uploadFile,
 };

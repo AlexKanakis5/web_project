@@ -13,5 +13,6 @@ router.get('/diplomas/:id/files', uploadController.listFiles);
 router.get('/diplomas/:id/files/:fileName', uploadController.getFile);
 router.put('/diplomas/:id/grades', diplomaController.addGradesToDiploma);
 router.get('/diplomas/pending', diplomaController.getPendingDiplomas);
+router.put('/diplomas/:id/cancel', diplomaController.cancelDiploma);
 
 module.exports = router;

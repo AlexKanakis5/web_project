@@ -30,6 +30,24 @@ const SecretaryPage = ({ user }) => {
     setSelectedDiploma(diploma);
   };
 
+  const handleCancelDiploma = async (diplomaId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/diplomas/${diplomaId}/cancel`, {
+        method: 'PUT',
+      });
+
+      if (response.ok) {
+        setDiplomas(diplomas.filter(diploma => diploma.id !== diplomaId));
+        setSelectedDiploma(null);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to cancel diploma');
+      }
+    } catch (error) {
+      setError('Failed to cancel diploma');
+    }
+  };
+
   return (
     <div className="secretary-page">
       <h1>Welcome, Secretary</h1>
@@ -49,6 +67,7 @@ const SecretaryPage = ({ user }) => {
           <p><strong>Second Professor Grade:</strong> {selectedDiploma.grade_second_professor || 'Not submitted'}</p>
           <p><strong>Third Professor Grade:</strong> {selectedDiploma.grade_third_professor || 'Not submitted'}</p>
           <button onClick={() => setSelectedDiploma(null)}>Hide details</button>
+          <button onClick={() => handleCancelDiploma(selectedDiploma.id)}>Cancel Diploma</button>
         </div>
       )}
       <div className="diplomas-grid">
