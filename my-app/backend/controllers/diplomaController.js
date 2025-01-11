@@ -1,4 +1,5 @@
 const pool = require('../config');
+const fs = require('fs');
 const path = require('path');
 
 const createDiploma = async (req, res) => {
@@ -143,6 +144,23 @@ const cancelDiploma = async (req, res) => {
     const query = 'UPDATE diplomas SET status = $1 WHERE id = $2';
     const values = ['cancelled', id];
     await pool.query(query, values);
+
+    // Create a text file with cancellation details
+    const reasons = ["Cancelled on professors request", "Cancelled on students request"];
+    const reason = reasons[Math.floor(Math.random() * reasons.length)];
+    const date = new Date().toLocaleString('en-GB');
+    const uniqueNumber = Math.floor(Math.random() * 1000000);
+    const content = `Cancelled on ${date}. ${reason}. This decision was taken on the general assembly ${uniqueNumber}`;
+
+    // Create the diploma directory if it doesn't exist
+    const diplomaDir = path.join(__dirname, `../uploads/diplomas/${id}`);
+    if (!fs.existsSync(diplomaDir)) {
+      fs.mkdirSync(diplomaDir, { recursive: true });
+    }
+
+    // Save the cancellation file in the diploma directory
+    const filePath = path.join(diplomaDir, `diploma_${id}_cancellation.txt`);
+    fs.writeFileSync(filePath, content);
 
     res.status(200).json({ message: 'Diploma cancelled successfully' });
   } catch (error) {
