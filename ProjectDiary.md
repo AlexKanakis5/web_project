@@ -74,18 +74,6 @@ id, username, password, user_type, am, phone, email, address.
 <li>Only the users that are concerned should have access to the pdf files
 <li>Added a page that the user can view and download all the pdf files 
 
-## <b>Next steps: 
-
-<li>Add a user page - <b>DONE
-<li>Check the functionality where the student can select 2nd and 3rd professor. Can they add more? Does the invite dissapear when the professors have accepted? - <b>DONE????
-<li>Delete the invite if user declines (later in order to test invite system) <b>PENDING 
-<li>Student accepts invites but diploma isn't added <b> DONE
-<li>Mobile site login press does nothing <b>PENDING
-<li>Add the option for the prof to grade a diploma. Maybe add a grade column for each teacher grade and then the faculty can set it to finished with the chosen grade 
-<li>When filter by main/third prof and pending, nothing shows 
-<li>Add delete button for each diploma, on the professors page 
-<li>Add option for diploma to be cancelled by main professor 
-<li>Professor cant grade newly created diplomas <b>DONE (when creating new diplomas "pending" was uppercase -> "Pending")
 
 
 # 07 / 01 / 2025
@@ -126,6 +114,19 @@ id, username, password, user_type, am, phone, email, address.
 <li>Student can now upload pdf files for each diploma that they are concerned
 <li>Also added it back to professor 
 
+## <b>Next steps: 
+
+<li>Add a user page - <b>DONE
+<li>Check the functionality where the student can select 2nd and 3rd professor. Can they add more? Does the invite dissapear when the professors have accepted? - <b>DONE????
+<li>Delete the invite if user declines (later in order to test invite system) <b>PENDING 
+<li>Student accepts invites but diploma isn't added <b> DONE
+<li>Mobile site login press does nothing <b>PENDING
+<li>Add the option for the prof to grade a diploma. Maybe add a grade column for each teacher grade and then the faculty can set it to finished with the chosen grade 
+<li>When filter by main/third prof and pending, nothing shows <b>Possible reason 'P'ending -> 'p'ending
+<li>Add delete button for each diploma, on the professors page 
+<li>Add option for diploma to be cancelled by main professor 
+<li>Professor cant grade newly created diplomas <b>DONE (when creating new diplomas "pending" was uppercase -> "Pending")
+<li>Fix all css 
 
 # 11 / 01 / 2025
 
@@ -134,3 +135,14 @@ id, username, password, user_type, am, phone, email, address.
 <li>Added new user to users table with user_type of secretary
 <li>Secretary user gets directed to secretary page upon login
 <li>They can view all pending diplomas 
+
+## 2. Cancell Diplomas
+
+<li>Secretary can press a button to cancell any diplomas
+<li>A text file is uploaded to the diploma folder that contains the details of the cancellation 
+
+## 3. Finish Diplomas
+
+<li>Secretary can press a button to set diploma status to finished
+<li>Button only shows when all three professors have graded the diploma
+<li>The final grade will be set to the average of the three 
