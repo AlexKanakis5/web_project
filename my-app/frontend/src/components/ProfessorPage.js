@@ -267,6 +267,17 @@ const ProfessorPage = ({ user }) => {
             {shouldShowInviteButton(diploma) && (
               <button onClick={() => handleInviteClick(diploma)}>Invite</button>
             )}
+            <div className="file-upload-container">
+              <label>Upload PDF:</label>
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => handleFileUpload(diploma.id, e.target.files[0])}
+              />
+            </div>
+            <Link to={`/diplomas/${diploma.id}/files`}>
+              <button>View Files</button>
+            </Link>
             {showInviteForm && selectedDiploma && selectedDiploma.id === diploma.id && (
               <div className="invite-form-container">
                 <form className="invite-form" onSubmit={handleInviteSubmit}>
@@ -286,17 +297,6 @@ const ProfessorPage = ({ user }) => {
                 </form>
               </div>
             )}
-            <div className="file-upload-container">
-              <label>Upload PDF:</label>
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={(e) => handleFileUpload(diploma.id, e.target.files[0])}
-              />
-            </div>
-            <Link to={`/diplomas/${diploma.id}/files`}>
-              <button>View Files</button>
-            </Link>
           </div>
         ))}
       </div>
