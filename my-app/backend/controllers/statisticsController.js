@@ -11,6 +11,8 @@ const getProfessorStatistics = async (req, res) => {
       FROM diplomas
       WHERE (email_main_professor = $1 OR email_second_professor = $1 OR email_third_professor = $1)
         AND status = 'finished'
+        AND finished_date IS NOT NULL
+        AND grade IS NOT NULL
       GROUP BY year
       ORDER BY year;
     `;
@@ -36,7 +38,8 @@ const getProfessorStatistics = async (req, res) => {
              grade
       FROM diplomas
       WHERE (email_main_professor = $1 OR email_second_professor = $1 OR email_third_professor = $1)
-        AND status = 'finished';
+        AND status = 'finished'
+        AND finished_date IS NOT NULL;
     `;
     const correlationValues = [email];
     const correlationResult = await pool.query(correlationQuery, correlationValues);
