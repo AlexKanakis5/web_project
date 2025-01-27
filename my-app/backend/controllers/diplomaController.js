@@ -183,9 +183,10 @@ const finishDiploma = async (req, res) => {
     }
 
     const finalGrade = (diploma.grade_main_professor + diploma.grade_second_professor + diploma.grade_third_professor) / 3;
+    const finishedDate = new Date().toISOString(); // Get the current date in ISO format
 
-    const updateQuery = 'UPDATE diplomas SET status = $1, grade = $2 WHERE id = $3 RETURNING *';
-    const updateValues = ['finished', finalGrade, id];
+    const updateQuery = 'UPDATE diplomas SET status = $1, grade = $2, finished_date = $3 WHERE id = $4 RETURNING *';
+    const updateValues = ['finished', finalGrade, finishedDate, id];
     const updateResult = await pool.query(updateQuery, updateValues);
 
     res.status(200).json(updateResult.rows[0]);

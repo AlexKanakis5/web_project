@@ -50,8 +50,13 @@ const SecretaryPage = ({ user }) => {
 
   const handleFinishDiploma = async (diplomaId) => {
     try {
+      const finishedDate = new Date().toISOString(); // Get the current date in ISO format
       const response = await fetch(`http://localhost:5000/api/diplomas/${diplomaId}/finish`, {
         method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ finished_date: finishedDate }),
       });
 
       if (response.ok) {
