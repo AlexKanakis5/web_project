@@ -6,8 +6,11 @@ import './StudentPage.css';
 const StudentPage = ({ user }) => {
   const [diplomas, setDiplomas] = useState([]);
   const [selectedDiploma, setSelectedDiploma] = useState(null);
+  const [showInviteForm, setShowInviteForm] = useState(false);
+  const [receiverEmail, setReceiverEmail] = useState('');
   const [error, setError] = useState('');
 
+  
   useEffect(() => {
     if (!user) {
       setError('User is not defined');
@@ -32,6 +35,52 @@ const StudentPage = ({ user }) => {
     fetchDiplomas();
   }, [user.am]);
 
+
+  const handleInviteClick = (diploma) => {
+    setSelectedDiploma(diploma);
+    setShowInviteForm(true);
+  };
+
+  const shouldShowInviteButton = (diploma) => {
+    const allEmailsFilled = diploma.email_main_professor && diploma.email_second_professor && diploma.email_third_professor;
+    return !allEmailsFilled;
+  };
+
+
+  
+  const handleInviteSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    const inviteData = {
+      diploma_title: selectedDiploma.title,
+      sender_email: user.email,
+      receiver_email: receiverEmail,
+      type: 'professor',
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/api/invites', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inviteData),
+      });
+
+      if (response.ok) {
+        alert('Invite sent successfully');
+        setShowInviteForm(false);
+        setReceiverEmail('');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to send invite');
+      }
+    } catch (error) {
+      console.error('Error sending invite:', error);
+      setError('Failed to send invite');
+    }
+  };
+  
   const handleFileUpload = async (diplomaId, file) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -102,6 +151,28 @@ const StudentPage = ({ user }) => {
                 onChange={(e) => handleFileChange(diploma.id, e)}
               />
             </div>
+            {shouldShowInviteButton(diploma) && (
+              <button onClick={() => handleInviteClick(diploma)}>Invite</button>
+            )}
+            {showInviteForm && selectedDiploma && selectedDiploma.id === diploma.id && (
+              <div className="invite-form-container">
+                <form className="invite-form" onSubmit={handleInviteSubmit}>
+                  <h2>Create Invite</h2>
+                  {error && <div className="error">{error}</div>}
+                  <div>
+                    <label>Receiver Email:</label>
+                    <input
+                      type="email"
+                      value={receiverEmail}
+                      onChange={(e) => setReceiverEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <button type="submit">Send Invite</button>
+                  <button type="button" onClick={() => setShowInviteForm(false)}>Cancel</button>
+                </form>
+              </div>
+            )}
           </div>
         ))}
       </div>
