@@ -17,6 +17,8 @@ const routes = require('./routes/index');
 app.use(express.json());
 
 // Enable CORS with specific options
+// It needs to be like that for the statistics page
+// If not it will throw a cors error
 app.use(cors({
   origin: 'http://localhost:3000', // Replace with your frontend's local IP address and port
   credentials: true // Allow credentials (cookies, authorization headers, etc.)
@@ -29,12 +31,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
   store: new pgSession({
       pool: pool, // Connection pool
-      tableName: 'session' // Use another table-name if you want
+      tableName: 'session' // whatever works
   }),
-  secret: 'secret', // Replace with your own secret
+  secret: 'secret', // whatever works
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // Set to true if using HTTPS
+  cookie: { secure: false } // false for now because we're not using HTTPS
 }));
 
 // API routes
