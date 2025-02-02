@@ -33,11 +33,12 @@ const SecretaryPage = ({ user }) => {
   const handleCancelDiploma = async (diplomaId) => {
     try {
       const response = await fetch(`http://localhost:5000/api/diplomas/${diplomaId}/cancel`, {
-        method: 'PUT',
+        // PUT instead of POST: we are updating existing 
+        method: 'PUT', 
       });
 
       if (response.ok) {
-        setDiplomas(diplomas.filter(diploma => diploma.id !== diplomaId));
+        setDiplomas(diplomas.filter(diploma => diploma.id !== diplomaId)); // remove the cancelled diploma from the list
         setSelectedDiploma(null);
       } else {
         const errorData = await response.json();
@@ -52,7 +53,7 @@ const SecretaryPage = ({ user }) => {
     try {
       const finishedDate = new Date().toISOString(); // Get the current date in ISO format
       const response = await fetch(`http://localhost:5000/api/diplomas/${diplomaId}/finish`, {
-        method: 'PUT',
+        method: 'PUT', // PUT instead of POST: we are updating existing
         headers: {
           'Content-Type': 'application/json',
         },
@@ -61,8 +62,11 @@ const SecretaryPage = ({ user }) => {
 
       if (response.ok) {
         const updatedDiploma = await response.json();
-        setDiplomas(diplomas.map(diploma => diploma.id === diplomaId ? updatedDiploma : diploma));
+        // update the diploma in the list from the response
         setSelectedDiploma(updatedDiploma);
+        setDiplomas(diplomas.map(diploma => diploma.id === diplomaId ? updatedDiploma : diploma)); 
+        alert('Diploma status set to finished');
+
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to finish diploma');

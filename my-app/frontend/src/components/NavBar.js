@@ -4,25 +4,25 @@ import './NavBar.css';
 
 const NavBar = ({ user, setUser }) => {
   const handleSignOut = () => {
-    localStorage.removeItem('user');
-    setUser(null);
+    localStorage.removeItem('user'); // remove the user from local storage when sign out is pressed
+    setUser(null);  // ...and set the user state to null
   };
 
   return (
     <div className="navbar">
       <div className="navbar-left">
-        <Link to="/">Home</Link>
+        <Link to="/">Home</Link> 
       </div>
       <div className="navbar-right">
         {user && (
           <>
             <span>{user.username}</span>
-            {user.user_type === 'professor' && (
+            {user.user_type === 'professor' && ( // only professors can create diplomas
               <Link to="/create-diploma">
                 <button className="navbar-button">Create Diploma</button>
               </Link>
             )}
-            {user.user_type !== 'secretary' && (
+            {user.user_type !== 'secretary' && ( // secretaries can't view invites or update info
               <>
                 <Link to="/invites">
                   <button className="navbar-button">View Invites</button>

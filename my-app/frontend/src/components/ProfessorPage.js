@@ -15,8 +15,10 @@ const ProfessorPage = ({ user }) => {
   const [filterRole, setFilterRole] = useState('all');
   const history = useHistory();
 
+  // use effect because I want to trigger when the component mounts or when the user.email changes
   useEffect(() => {
     const fetchDiplomas = async () => {
+      // await because we need to wait for the response
       const response = await fetch(`http://localhost:5000/api/diplomas/professor/${user.email}`);
       const data = await response.json();
       setDiplomas(data);
@@ -34,8 +36,9 @@ const ProfessorPage = ({ user }) => {
   const filterDiplomas = () => {
     let filtered = diplomas;
 
-    if (filterStatus !== 'all') {
-      filtered = filtered.filter(diploma => diploma.status === filterStatus);
+    if (filterStatus !== 'all') { 
+      // filter diplomas by status (pending, finished, cancelled)
+      filtered = filtered.filter(diploma => diploma.status === filterStatus); 
     }
 
     if (filterRole !== 'all') {
@@ -68,7 +71,7 @@ const ProfessorPage = ({ user }) => {
           diploma_title: selectedDiploma.title,
           sender_email: user.email,
           receiver_email: receiverEmail,
-          type: 'professor',
+          type: 'student',
         }),
       });
 
@@ -86,27 +89,39 @@ const ProfessorPage = ({ user }) => {
   };
 
   const handleFileUpload = async (diplomaId, file) => {
-    const formData = new FormData();
+    const formData = new FormData(); // create a new FormData object because we are sending a file
     formData.append('file', file);
 
     try {
+      // send the file to the server to be uploaded to correct diploma folder
       const response = await fetch(`http://localhost:5000/api/diplomas/${diplomaId}/upload`, {
         method: 'POST',
         body: formData,
       });
 
-      if (response.ok) {
-        const updatedDiploma = await response.json();
-        setDiplomas((prevDiplomas) =>
-          prevDiplomas.map((diploma) =>
-            diploma.id === updatedDiploma.id ? updatedDiploma : diploma
-          )
-        );
+      // if (response.ok) {
+      //   // Parse the updated diploma from the response
+      //   const updatedDiploma = await response.json();
+
+      //   // // Update the diplomas state with the updated diploma
+      //   // setDiplomas((prevDiplomas) =>
+      //   //   prevDiplomas.map((diploma) =>
+      //   //     diploma.id === updatedDiploma.id ? updatedDiploma : diploma
+      //   //   )
+      //   // );
+      // } else {
+      //   const errorData = await response.json();
+      //   setError(errorData.message || 'Failed to upload file');
+      // }
+
+      if (response.ok) { 
+        alert('File uploaded successfully');
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to upload file');
       }
     } catch (error) {
+      console.error('Error uploading file:', error);
       setError('Failed to upload file');
     }
   };
@@ -114,7 +129,8 @@ const ProfessorPage = ({ user }) => {
   const shouldShowInviteButton = (diploma) => {
     const allEmailsFilled = diploma.email_main_professor && diploma.email_second_professor && diploma.email_third_professor;
     const isUserAuthorized = user.email === diploma.email_main_professor || user.am === diploma.am_student;
-    return !allEmailsFilled && isUserAuthorized;
+    const isNotCancelled = diploma.status !== 'cancelled';
+    return !allEmailsFilled && isUserAuthorized && isNotCancelled;
   };
 
 
@@ -143,7 +159,8 @@ const ProfessorPage = ({ user }) => {
       : user.email === selectedDiploma.email_second_professor
       ? 'grade_second_professor'
       : 'grade_third_professor';
-
+    
+    // send the request to server to update the grade of the user with this email
     const response = await fetch(`http://localhost:5000/api/diplomas/${selectedDiploma.id}/grades`, {
       method: 'PUT',
       headers: {
@@ -166,7 +183,8 @@ const ProfessorPage = ({ user }) => {
 
   const handleExportDiplomas = () => {
     const dataStr = JSON.stringify(diplomas, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+    // create a data URI because we want to download the data as a file
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr); 
 
     const exportFileDefaultName = 'diplomas.json';
 
@@ -182,6 +200,7 @@ const ProfessorPage = ({ user }) => {
       <button onClick={handleExportDiplomas} style={{ float: 'right' }}>Export Diplomas</button>
 
       <h2>Your Diplomas</h2>
+      {/* history used to navigate to the statistics page (react thing)*/}
       <button onClick={() => history.push('/statistics')}>Show Stats</button>
       <div className="filters">
         <label>
@@ -218,7 +237,7 @@ const ProfessorPage = ({ user }) => {
           <p><strong>Third Professor Grade:</strong> {selectedDiploma.grade_third_professor || 'Not submitted'}</p>
           {selectedDiploma.status === 'pending' && (
             <>
-              {user.email === selectedDiploma.email_main_professor && (
+              {user.email === selectedDiploma.email_main_professor && ( // only do this if the user is the main professor
                 <div>
                   <label>Main Professor Grade:</label>
                   <input 

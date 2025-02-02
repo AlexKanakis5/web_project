@@ -1,3 +1,5 @@
+// OLD used to add secretary password
+
 const bcrypt = require('bcrypt');
 
 const password = 'secretary123';

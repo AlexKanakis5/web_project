@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const createDiploma = async (req, res) => {
+  // Get the body data from the request
   const {
     title,
     description,
@@ -24,6 +25,8 @@ const createDiploma = async (req, res) => {
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
       RETURNING *;
     `;
+    // The values ($1, $2, etc.) are placeholders for the values below in the values array
+    // The values must be in the same order as the columns in the query
     const values = [
       title,
       description,
@@ -86,7 +89,7 @@ const getDiplomasByStudentAm = async (req, res) => {
 };
 
 const addGradesToDiploma = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params; // The diploma id is in the request params because the route is /diplomas/:id/grades
   const { grade, email } = req.body; // Include email in the request body
 
   try {
@@ -103,7 +106,8 @@ const addGradesToDiploma = async (req, res) => {
     let updateQuery = '';
     let updateValues = [];
 
-    if (email === checkResult.rows[0].email_main_professor) {
+    // CheckResult contains the diploma from the query above
+    if (email === checkResult.rows[0].email_main_professor) { 
       updateQuery = 'UPDATE diplomas SET grade_main_professor = $1 WHERE id = $2';
       updateValues = [grade, id];
     } else if (email === checkResult.rows[0].email_second_professor) {
@@ -146,6 +150,7 @@ const cancelDiploma = async (req, res) => {
     await pool.query(query, values);
 
     // Create a text file with cancellation details
+    // The cancellation reason is randomly selected from the reasons array
     const reasons = ["Cancelled on professors request", "Cancelled on students request"];
     const reason = reasons[Math.floor(Math.random() * reasons.length)];
     const date = new Date().toLocaleString('en-GB');

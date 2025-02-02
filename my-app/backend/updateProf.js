@@ -1,3 +1,6 @@
+// add professors to users table with the same password
+// I have a file to do that with students
+
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 

@@ -2,6 +2,7 @@ const Announcement = require('../models/userModel');
 
 const getAllAnnouncements = async (req, res) => {
   try {
+    // userModel.js contains the query to fetch all announcements  
     const announcements = await Announcement.getAllAnnouncements();
     res.json(announcements);
   } catch (error) {
@@ -13,3 +14,4 @@ const getAllAnnouncements = async (req, res) => {
 module.exports = {
   getAllAnnouncements,
 };
+

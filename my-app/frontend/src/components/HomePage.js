@@ -5,8 +5,8 @@ import './HomePage.css';
 const HomePage = () => {
   const [announcements, setAnnouncements] = useState([]);
 
-  useEffect(() => {
-    let isMounted = true; // Track if the component is mounted
+  useEffect(() => { // useEffect because we want to fetch data when the component mounts
+    let isMounted = true; // Track if the component is mounted because we are using async functions
 
     const fetchAnnouncements = async () => {
       try {

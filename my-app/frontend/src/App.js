@@ -16,7 +16,7 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const storedUser = JSON.parse(localStorage.getItem('user')); // Get user from local storage
     if (storedUser) {
       setUser(storedUser);
     }
@@ -29,7 +29,8 @@ const App = () => {
   }, [user]);
 
   return (
-    <Router>
+    // Router is used to define the routes of the application
+    <Router> 
       <div>
         <NavBar user={user} setUser={setUser} />
         <Switch>
@@ -45,13 +46,15 @@ const App = () => {
             )}
           </Route>
           <Route path="/login">
+            {/* if the user is already logged in redirect to root */}
             {user ? <Redirect to="/" /> : <LoginForm setUser={setUser} />}
           </Route>
           <Route path="/update">
             {user ? <UpdateUser user={user} setUser={setUser} /> : <Redirect to="/login" />}
           </Route>
           <Route path="/create-diploma">
-            {user && user.user_type === 'professor' ? <CreateDiploma user={user} /> : <Redirect to="/login" />}
+            {/* if the user is a not loged in or a professor redirect to login */}
+            {user && user.user_type === 'professor' ? <CreateDiploma user={user} /> : <Redirect to="/login" />} 
           </Route>
           <Route path="/invites">
             {user ? <InvitesPage user={user} /> : <Redirect to="/login" />}

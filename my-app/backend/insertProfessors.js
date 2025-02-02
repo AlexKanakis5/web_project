@@ -1,3 +1,5 @@
+// used this to get the professors from the website
+// used something similar for students, deleted it idk
 const { Pool } = require('pg');
 const fetch = require('node-fetch');
 

@@ -13,8 +13,9 @@ const CreateDiploma = ({ user }) => {
     setError('');
 
     const dueDate = new Date();
-    dueDate.setMonth(dueDate.getMonth() + 3);
+    dueDate.setMonth(dueDate.getMonth() + 18);
 
+    // these data are needed in the backend to create a diploma
     const diplomaData = {
       title,
       description,
@@ -31,6 +32,7 @@ const CreateDiploma = ({ user }) => {
     };
 
     const response = await fetch('http://localhost:5000/api/diplomas', {
+      // save the diploma to the database with a POST request
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,6 +41,7 @@ const CreateDiploma = ({ user }) => {
     });
 
     if (response.ok) {
+      // redirect to the home page after creating the diploma
       history.push('/');
     } else {
       const errorData = await response.json();

@@ -20,7 +20,7 @@ app.use(express.json());
 // It needs to be like that for the statistics page
 // If not it will throw a cors error
 app.use(cors({
-  origin: 'http://localhost:3000', // Replace with your frontend's local IP address and port
+  origin: 'http://localhost:3000', // The frontend URL
   credentials: true // Allow credentials (cookies, authorization headers, etc.)
 }));
 
@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configure session management
-app.use(session({
+app.use(session({ // session in javascript is a middleware that allows you to store data on the server
   store: new pgSession({
       pool: pool, // Connection pool
       tableName: 'session' // whatever works
@@ -40,6 +40,7 @@ app.use(session({
 }));
 
 // API routes
+// maybe I could have used the routes/index.js file, idc any more
 app.use('/api', authRoutes);
 app.use('/api', diplomaRoutes);
 app.use('/api', inviteRoutes);
@@ -48,7 +49,8 @@ app.use('/api', inviteRoutes);
 app.use('/', routes);
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../../my-app/frontend/build')));
+// ADD THIS IIF YOU WANT TO SEE ANYTHING WHEN ON PORT 5000
+// app.use(express.static(path.join(__dirname, '../../my-app/frontend/build')));
 
 // The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
 app.get('*', (req, res) => {

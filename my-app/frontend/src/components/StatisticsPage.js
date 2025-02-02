@@ -12,6 +12,7 @@ const StatisticsPage = ({ user }) => {
 
   useEffect(() => {
     const fetchStatistics = async () => {
+      // fetch the statics that are provided in this url by database queries in the backend
       const response = await fetch(`http://localhost:5000/api/statistics/professor/${user.email}`, {
         credentials: 'include' // Include credentials (cookies, authorization headers, etc.)
       });

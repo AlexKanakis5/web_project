@@ -5,8 +5,9 @@ const getProfessorStatistics = async (req, res) => {
 
   try {
     // Query for average grade per year
+    // EXTRACT(YEAR FROM finished_date) gets the year from the finished_date column
     const averageGradeQuery = `
-      SELECT EXTRACT(YEAR FROM finished_date) AS year,
+      SELECT EXTRACT(YEAR FROM finished_date) AS year, 
              AVG(grade) AS average_grade
       FROM diplomas
       WHERE (email_main_professor = $1 OR email_second_professor = $1 OR email_third_professor = $1)

@@ -2,6 +2,8 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const pool = require('../config');
+
+// this is the way multer want the storage to be configured
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const diplomaId = req.params.id;
@@ -28,6 +30,8 @@ const uploadFile = async (req, res) => {
     `;
     const values = [filePath, diplomaId];
     const result = await pool.query(query, values);
+
+    // Respond with the updated diploma 
     res.status(200).json(result.rows[0]);
   } catch (error) {
     console.error('Error uploading file:', error);

@@ -74,7 +74,7 @@ const updateInviteStatus = async (req, res) => {
 
     if (status === 'accepted') {
       const diplomaTitle = inviteResult.rows[0].diploma_title;
-      console.log(diplomaTitle);
+      // console.log(diplomaTitle);
       const getDiplomaQuery = `
         SELECT email_main_professor, email_second_professor, email_third_professor
         FROM diplomas
@@ -112,7 +112,7 @@ const updateInviteStatus = async (req, res) => {
           await client.query(updateDiplomaQuery, updateDiplomaValues);
         }
       } else if (userType === 'student') {
-        console.log(am)
+        // console.log(am)
         const updateDiplomaQuery = `
           UPDATE diplomas
           SET am_student = $1

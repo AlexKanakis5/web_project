@@ -5,7 +5,7 @@ const InvitesPage = ({ user }) => {
   const [sentInvites, setSentInvites] = useState([]);
   const [receivedInvites, setReceivedInvites] = useState([]);
 
-  useEffect(() => {
+  useEffect(() => { // useEffect because we want to fetch data when the component mounts
     const fetchSentInvites = async () => {
       const response = await fetch(`http://localhost:5000/api/invites/sent/${user.email}`);
       const data = await response.json();
@@ -20,8 +20,9 @@ const InvitesPage = ({ user }) => {
 
     fetchSentInvites();
     fetchReceivedInvites();
-  }, [user.email]);
+  }, [user.email]); // user.email is needed as a dependency because we use it in the fetch URL
 
+  // update the invites database when the user accepts or declines an invite
   const handleUpdateStatus = async (id, status) => {
     const response = await fetch('http://localhost:5000/api/invites/status', {
       method: 'PUT',
@@ -52,7 +53,8 @@ const InvitesPage = ({ user }) => {
           </li>
         ))}
       </ul>
-
+      
+      {/* invite accept and decline persists because I need to debug */}
       <h1>Received Invites</h1>
       <ul className="invites-list">
         {receivedInvites.map((invite) => (

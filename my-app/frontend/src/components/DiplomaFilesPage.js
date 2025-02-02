@@ -7,8 +7,9 @@ const DiplomaFilesPage = ({ user }) => {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState('');
 
-  useEffect(() => {
+  useEffect(() => { // useEffect because we want to fetch data when the component mounts
     const fetchFiles = async () => {
+      // fetch the files for the diploma with the given ID
       const response = await fetch(`http://localhost:5000/api/diplomas/${id}/files`);
       if (response.ok) {
         const data = await response.json();
@@ -23,16 +24,18 @@ const DiplomaFilesPage = ({ user }) => {
   }, [id]);
 
   const handleDownload = async (fileName) => {
+    // download the file with the given name when the file name is clicked
     const response = await fetch(`http://localhost:5000/api/diplomas/${id}/files/${fileName}`);
     if (response.ok) {
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      // create a URL for the file and download it
+      const blob = await response.blob(); // create the blob data (raw) from the response
+      const url = window.URL.createObjectURL(blob); // generate a URL for the blob data
+      const a = document.createElement('a'); // create a link element
+      a.href = url; // set the href attribute of the link to the URL
+      a.download = fileName; // set the download attribute of the link to the file name
+      document.body.appendChild(a); // append the link to the body
+      a.click(); // simulate a click on the link
+      a.remove(); // remove the link from the body
     } else {
       const errorData = await response.json();
       setError(errorData.message || 'Failed to download file');

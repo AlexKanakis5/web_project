@@ -1,3 +1,7 @@
+// create a random diploma for a single professor
+// run with node createSingleDiploma.js
+
+
 const { Pool } = require('pg');
 const { faker } = require('@faker-js/faker');
 

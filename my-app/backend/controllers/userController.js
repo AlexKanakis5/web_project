@@ -28,6 +28,7 @@ const updateUser = async (req, res) => {
       return res.status(401).json({ message: 'Current password is incorrect' });
     }
 
+    // If newPassword is provided, hash it, otherwise use the current password
     const hashedPassword = newPassword ? await bcrypt.hash(newPassword, 10) : user.password;
 
     await pool.query(

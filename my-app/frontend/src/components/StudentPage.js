@@ -43,7 +43,8 @@ const StudentPage = ({ user }) => {
 
   const shouldShowInviteButton = (diploma) => {
     const allEmailsFilled = diploma.email_main_professor && diploma.email_second_professor && diploma.email_third_professor;
-    return !allEmailsFilled;
+    const isNotCancelled = diploma.status !== 'cancelled';
+    return !allEmailsFilled && isNotCancelled;
   };
 
 

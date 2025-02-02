@@ -1,3 +1,6 @@
+// used to add the students to the user database
+// I have a similar file for professors 
+
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 

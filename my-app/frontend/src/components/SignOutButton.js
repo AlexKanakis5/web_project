@@ -7,7 +7,7 @@ const SignOutButton = ({ setUser }) => {
   const handleSignOut = () => {
     localStorage.removeItem('user');
     setUser(null);
-    history.push('/login');
+    history.push('/');
   };
 
   return (

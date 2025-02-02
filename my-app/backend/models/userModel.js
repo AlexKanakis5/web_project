@@ -1,3 +1,4 @@
+// idk half the controller functions could be in here too
 const pool = require('../config');
 
 const getAllUsers = async () => {
