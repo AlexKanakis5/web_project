@@ -1,3 +1,7 @@
+// file for creating 20 random diplomas for a professor
+// run with node createDiplomas.js
+// dont use this 
+
 const { Pool } = require('pg');
 const { faker } = require('@faker-js/faker');
 
